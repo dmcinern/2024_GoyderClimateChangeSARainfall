@@ -6,19 +6,24 @@ if (Sys.info()['sysname']=='Windows'){
   data.dirname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/20240724_BOM_subdaily_rainfall_radar/Working/'
   shapefile.dirname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/'
 } else {
-  dirname = '../../../Data/Radar'
-  shapefile.dirname = '../../../Data/Shapefiles'
+  data.dirname = '../../../Data/Radar/'
+  shapefile.dirname = '../../../Data/Shapefiles/'
 }
 RData.dirname = data.dirname
 fig.dirname = data.dirname
 
 #####################################################################
 
-#radar = 'Sellicks'
-radar = 'BuckPk'
+args = commandArgs(trailingOnly=TRUE)
+radar = args[1]
+year = as.integer(args[2])
+month = as.integer(args[3])
 
-year.start = 2020
-year.end = 2020
+#radar = 'Sellicks'
+#radar = 'BuckPk'
+
+#year.start = 2020
+#year.end = 2020
 
 make_plots = F
 
@@ -56,11 +61,15 @@ if (radar=='BuckPk'){
   prefix = paste0(dirname,'Sellick.46.')
 }
 
-date.start = as.Date('2019/06/08')
+date.start = as.Date(paste0(year,'/',month,'/01'))
+days = lubridate::days_in_month(date.start)
+date.end = as.Date(paste0(year,'/',month,'/',days))
+
+#date.start = as.Date('2019/06/08')
 #date.start = as.Date('2019/06/09')
 #date.end = as.Date('2019/06/08')
 #date.end = as.Date('2019/06/13')
-date.end = as.Date('2019/06/30')
+#date.end = as.Date('2019/06/30')
 #date.end = as.Date('2019/06/11')
 #date.end = date.start
 
@@ -118,17 +127,16 @@ for (date. in date.fmt){
     fn = filenames[i]
     
     a=strsplit(fn,'[/]')
-    
-    date_str = substr(a[[1]][11],4,18)
+
+    date_str = substr(a[[1]][length(a[[1]])],4,18)
+ 
+    print(date_str)
+ 
     date_str_vec = c(date_str_vec,date_str)
 
     p_raster_xy <- rast(fn)
     
     fname = paste0(fn,'.RData')
-    
-    save(file=fname,p_raster_xy)
-    
-    pause
     
     p_raster_latlon = terra::project(p_raster_xy,crs(SA_boundary_latlon))
 
@@ -200,47 +208,47 @@ out = list(P_max_all_vec = P_max_all_vec,
 date_str_first = date_str_vec[1]
 date_str_last = date_str_vec[length(date_str_vec)]
 
-fname = paste0(RData.dirname,'out.',radar,'.',date_str_first,'.',date_str_last)
+fname = paste0(RData.dirname,'out.',radar,'.',date_str_first,'.',date_str_last,'.RData')
 save(file=fname,out)
 
 ##############
 
-par(mfrow=c(2,1))
-
-plot(P_sites_mat[,1],type='l')
-
-load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023034_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
-i.start=which(out$date == date.start)
-i.end=which(out$date == date.end) + 48
-keep = i.start:i.end
-plot(out$date[keep],out$P[keep],type='l')
-
-##############
-
-par(mfrow=c(2,1))
-
-plot(P_sites_mat[,2],type='l')
-
-load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023090_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
-i.start=which(out$date == date.start)
-i.end=which(out$date == date.end) + 48
-keep = i.start:i.end
-plot(out$date[keep],out$P[keep],type='l')
-
-##############
-
-par(mfrow=c(2,1))
-
-#plot(P_sites_mat[,2],type='l')
-plot(P_sites_mat[,3],type='l')
-
-#load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023090_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
-load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023013_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
-i.start=which(out$date == date.start)
-i.end=which(out$date == date.end) + 48
-keep = i.start:i.end
-plot(out$date[keep],out$P[keep],type='l')
-
-##############
-
-
+#$#par(mfrow=c(2,1))
+#$#
+#$#plot(P_sites_mat[,1],type='l')
+#$#
+#$#load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023034_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
+#$#i.start=which(out$date == date.start)
+#$#i.end=which(out$date == date.end) + 48
+#$#keep = i.start:i.end
+#$#plot(out$date[keep],out$P[keep],type='l')
+#$#
+#$###############
+#$#
+#$#par(mfrow=c(2,1))
+#$#
+#$#plot(P_sites_mat[,2],type='l')
+#$#
+#$#load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023090_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
+#$#i.start=which(out$date == date.start)
+#$#i.end=which(out$date == date.end) + 48
+#$#keep = i.start:i.end
+#$#plot(out$date[keep],out$P[keep],type='l')
+#$#
+#$###############
+#$#
+#$#par(mfrow=c(2,1))
+#$#
+#$##plot(P_sites_mat[,2],type='l')
+#$#plot(P_sites_mat[,3],type='l')
+#$#
+#$##load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023090_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
+#$#load("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall_orig//RData/AWS_023013_accumHandling.spread_processed.RData_aggPeriod.30mins_aggDataThresh.0.8_agg.RData")
+#$#i.start=which(out$date == date.start)
+#$#i.end=which(out$date == date.end) + 48
+#$#keep = i.start:i.end
+#$#plot(out$date[keep],out$P[keep],type='l')
+#$#
+#$###############
+#$#
+#$#
