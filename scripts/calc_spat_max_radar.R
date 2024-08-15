@@ -5,22 +5,26 @@ library(terra)
 if (Sys.info()['sysname']=='Windows'){
   data.dirname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/20240724_BOM_subdaily_rainfall_radar/Working/'
   shapefile.dirname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/'
+  RData.dirname = data.dirname
+  fig.dirname = data.dirname
 } else {
   data.dirname = '../../../Data/Radar/'
   shapefile.dirname = '../../../Data/Shapefiles/'
+  RData.dirname = '../RData/Radar/'
+  fig.dirname = '../figures/Radar/'
 }
-RData.dirname = data.dirname
-fig.dirname = data.dirname
 
 #####################################################################
 
-args = commandArgs(trailingOnly=TRUE)
-radar = args[1]
-year = as.integer(args[2])
-month = as.integer(args[3])
+#args = commandArgs(trailingOnly=TRUE)
+#radar = args[1]
+#year = as.integer(args[2])
+#month = as.integer(args[3])
 
-#radar = 'Sellicks'
+radar = 'Sellicks'
 #radar = 'BuckPk'
+year = 2021
+month = 1
 
 #year.start = 2020
 #year.end = 2020
@@ -57,7 +61,7 @@ if (radar=='BuckPk'){
   dirname = paste0(data.dirname,'BuckPk/prcp-c5/')
   prefix = paste0(dirname,'BuckPk.64.')
 } else {
-  dirname = paste0(data.dirname,'Sellicks/tmp/')
+  dirname = paste0(data.dirname,'Sellicks/prcp-c5/')
   prefix = paste0(dirname,'Sellick.46.')
 }
 
@@ -79,12 +83,18 @@ col = colorRampPalette(c("white", "blue", "cyan", "green","yellow","orange","red
 
 #####################################################################
 
-dirname.date = paste0(prefix,format(date.start,'%Y%m%d'),'.prcp-c5/')
+prefix.date = paste0(prefix,format(date.start,'%Y%m%d'),'.prcp-c5')
+tar.date = paste0(prefix.date,'.tar')
+dirname.date = paste0(prefix.date,'/')
+untar(tarfile=tar.date,exdir=dirname.date)
+
 fname = paste0(dirname.date,'_file_list')
 d = read.csv(fname,header=F)
 filenames = paste0(dirname.date,d[,1])
 fn = filenames[1]
 p_raster_xy_base <- rast(fn)
+
+unlink(dirname.date, recursive = TRUE)
 
 #####################################################################
 
@@ -106,97 +116,121 @@ box_latlon <- vect(coords, crs=crs(SA_boundary_latlon))
 
 #####################################################################
 
+date.vec = seq(date.start,date.end,by='days')
+
 date.fmt = format(seq(date.start,date.end,by='days'),'%Y%m%d')
 
 P_max_all_vec = P_sites_mat = P_max_GA_vec = P_max_box_vec = date_str_vec = c()
 
-for (date. in date.fmt){
+#for (date. in date.fmt){
+for (d in 1:length(date.vec)){
+
+  date. = date.vec[d]
 
   print(date.)
 
-  dirname.date = paste0(prefix,date.,'.prcp-c5/')
+  date.fmt = format(date.,'%Y%m%d')
 
-  fname = paste0(dirname.date,'_file_list')
-  d = read.csv(fname,header=F)
+#prefix.date = paste0(prefix,format(date.start,'%Y%m%d'),'.prcp-c5')
+#tar.date = paste0(prefix.date,'.tar')
+#dirname.date = paste0(prefix,'/')
 
-  filenames = paste0(dirname.date,d[,1])
+  prefix.date = paste0(prefix,date.fmt,'.prcp-c5')
+  tar.date = paste0(prefix.date,'.tar')
+  dirname.date = paste0(prefix.date,'/')
 
-  par(mfrow=c(1,1))
+  if (file.exists(tar.date)){
+
+    o = untar(tarfile=tar.date,exdir=dirname.date)
+  #if (o!=0){
+  #  cat('problem loading ',tar.date,'/n')
+  #}
+
+    fname = paste0(dirname.date,'_file_list')
+
+  #if (file.exists(fname)){
+
+    d = read.csv(fname,header=F)
+
+    filenames = paste0(dirname.date,d[,1])
+    filenames = sort(filenames)
+
+print(filenames)
+
+pause
+
+    for (i in 1:length(filenames)){
+      fn = filenames[i]
+    
+      a=strsplit(fn,'[/]')
+
+      date_str = substr(a[[1]][length(a[[1]])],4,18)
+ 
+      print(date_str)
+ 
+      date_str_vec = c(date_str_vec,date_str)
+
+      p_raster_xy <- rast(fn)
+    
+      p_raster_latlon = terra::project(p_raster_xy,crs(SA_boundary_latlon))
+
+      P_all = values(p_raster_latlon)
+      P_max_all = max(P_all,na.rm=T)
+      P_max_all_vec = c(P_max_all_vec,P_max_all)
   
-  for (i in 1:length(filenames)){
-    fn = filenames[i]
-    
-    a=strsplit(fn,'[/]')
-
-    date_str = substr(a[[1]][length(a[[1]])],4,18)
- 
-    print(date_str)
- 
-    date_str_vec = c(date_str_vec,date_str)
-
-    p_raster_xy <- rast(fn)
-    
-    fname = paste0(fn,'.RData')
-    
-    p_raster_latlon = terra::project(p_raster_xy,crs(SA_boundary_latlon))
-
-    P_all = values(p_raster_latlon)
-    P_max_all = max(P_all,na.rm=T)
-    P_max_all_vec = c(P_max_all_vec,P_max_all)
-
-    P_sites = terra::extract(x=p_raster_xy,y=coords_xy_vect)$precipitation
-    P_sites_mat = rbind(P_sites_mat,P_sites)
-
-    P_GA = terra::extract(p_raster_latlon,GA_boundary_latlon)$precipitation
-    P_max_GA = max(P_GA,na.rm=T)
-    P_max_GA_vec = c(P_max_GA_vec,P_max_GA)
-    
-    P_box = crop(p_raster_latlon,extent_box_latlon)
-    P_max_box = max(values(P_box),na.rm=T)
-    P_max_box_vec = c(P_max_box_vec,P_max_box)
-    
-    if (make_plots){
-
-      plot(p_raster_latlon,range=c(0,2),col=col)
+      P_sites = terra::extract(x=p_raster_xy,y=coords_xy_vect)$precipitation
+      P_sites_mat = rbind(P_sites_mat,P_sites)
+  
+      P_GA = terra::extract(p_raster_latlon,GA_boundary_latlon)$precipitation
+      P_max_GA = max(P_GA,na.rm=T)
+      P_max_GA_vec = c(P_max_GA_vec,P_max_GA)
       
-      # location of max radar rainfall
-      if (P_max_all>0.2){
-        i=which(P_all==P_max_all)
-        xy = xyFromCell(p_raster_latlon,i)
-        points(xy,col='green',cex=5)
+      P_box = crop(p_raster_latlon,extent_box_latlon)
+      P_max_box = max(values(P_box),na.rm=T)
+      P_max_box_vec = c(P_max_box_vec,P_max_box)
+      
+      if (make_plots){
+  
+        plot(p_raster_latlon,range=c(0,2),col=col)
+        
+        # location of max radar rainfall
+        if (P_max_all>0.2){
+          i=which(P_all==P_max_all)
+          xy = xyFromCell(p_raster_latlon,i)
+          points(xy,col='green',cex=5)
+        }
+  
+        # greater Adelaide boundary
+        lines(GA_boundary_latlon,col='red')
+        
+        # location of max GA radar rainfall
+        if (P_max_GA>0.2){
+          i=which(P_all==P_max_GA)
+          xy = xyFromCell(p_raster_latlon,i)
+          points(xy,col='red',cex=4)
+        }
+  
+        lines(box_latlon,col='orange')
+        
+        # location of max box radar rainfall
+        if (P_max_box>0.2){
+          i=which(P_all==P_max_box)
+          xy = xyFromCell(p_raster_latlon,i)
+          points(xy,col='orange',cex=4)
+        }
+        
+        # Adelaide airport
+        points(x=sites.lon,y=sites.lat,col='magenta',cex=1,pch=15)
+  
+        # state boundary
+        lines(SA_boundary_latlon)
+        
+        title(a[[1]][length(a[[1]])])
+  
       }
-
-      # greater Adelaide boundary
-      lines(GA_boundary_latlon,col='red')
-      
-      # location of max GA radar rainfall
-      if (P_max_GA>0.2){
-        i=which(P_all==P_max_GA)
-        xy = xyFromCell(p_raster_latlon,i)
-        points(xy,col='red',cex=4)
-      }
-
-      lines(box_latlon,col='orange')
-      
-      # location of max box radar rainfall
-      if (P_max_box>0.2){
-        i=which(P_all==P_max_box)
-        xy = xyFromCell(p_raster_latlon,i)
-        points(xy,col='orange',cex=4)
-      }
-      
-      # Adelaide airport
-      points(x=sites.lon,y=sites.lat,col='magenta',cex=1,pch=15)
-
-      # state boundary
-      lines(SA_boundary_latlon)
-      
-      title(a[[1]][length(a[[1]])])
-
-    }
-
+    } 
   }
-
+  unlink(dirname.date, recursive = TRUE)
 }
 
 out = list(P_max_all_vec = P_max_all_vec,
