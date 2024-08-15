@@ -16,34 +16,43 @@ if (Sys.info()['sysname']=='Windows'){
 
 #####################################################################
 
-#args = commandArgs(trailingOnly=TRUE)
-#radar = args[1]
-#year = as.integer(args[2])
-#month = as.integer(args[3])
+args = commandArgs(trailingOnly=TRUE)
+radar = args[1]
+year = as.integer(args[2])
+month = as.integer(args[3])
 
-radar = 'Sellicks'
+#radar = 'Sellicks'
 #radar = 'BuckPk'
-year = 2021
-month = 1
+#year = 2021
+#month = 1
 
-#year.start = 2020
-#year.end = 2020
+prcp = 'prcp-c5'
 
 make_plots = F
+
+agg_data_thresh = 0.8
+
+#####################################################################
+
+aggPeriod_list = c('5 mins','10 mins','30 mins','1 hour','3 hours')
 
 #####################################################################
 
 sites.names = c('AdelaideAirport',
                 'KentTown',
-                'EdinburghRAAF')
+                'EdinburghRAAF',
+		'Hindmarsh Valley')
+
 sites.lon = c(138.5196,
               138.6216,
-              138.6223)
+              138.6223,
+              138.5751)
 sites.lat = c(-34.9524,
               -34.9211,
-              -34.7111)
+              -34.7111,
+              -35.4123)
 
-lon_min = 138.5; lon_max = 139
+lon_min = 138.25; lon_max = 139
 lat_min = -35.5; lat_max = -34.5
 
 #####################################################################
@@ -51,39 +60,50 @@ lat_min = -35.5; lat_max = -34.5
 fname = paste0(shapefile.dirname,'sa_state_polygon_shp/SA_STATE_POLYGON_shp.shp')
 SA_boundary_latlon <- vect(fname)
 
-fname = paste0(shapefile.dirname,'GreaterAdelaidePlanningRegion_shp/GreaterAdelaidePlanningRegion_GDA2020.shp')
-GA_boundary_latlon <- vect(fname)
-GA_boundary_latlon = terra::project(GA_boundary_latlon,crs(SA_boundary_latlon))
+#fname = paste0(shapefile.dirname,'GreaterAdelaidePlanningRegion_shp/GreaterAdelaidePlanningRegion_GDA2020.shp')
+#GA_boundary_latlon <- vect(fname)
+#GA_boundary_latlon = terra::project(GA_boundary_latlon,crs(SA_boundary_latlon))
 
 #####################################################################
 
-if (radar=='BuckPk'){
-  dirname = paste0(data.dirname,'BuckPk/prcp-c5/')
-  prefix = paste0(dirname,'BuckPk.64.')
-} else {
-  dirname = paste0(data.dirname,'Sellicks/prcp-c5/')
-  prefix = paste0(dirname,'Sellick.46.')
-}
-
 date.start = as.Date(paste0(year,'/',month,'/01'))
 days = lubridate::days_in_month(date.start)
+#days = 1
 date.end = as.Date(paste0(year,'/',month,'/',days))
 
-#date.start = as.Date('2019/06/08')
-#date.start = as.Date('2019/06/09')
-#date.end = as.Date('2019/06/08')
-#date.end = as.Date('2019/06/13')
-#date.end = as.Date('2019/06/30')
-#date.end = as.Date('2019/06/11')
-#date.end = date.start
+mins.radar = 5
 
-# if (make_plots){pdf(file=paste0(fig.dirname,'radar.pdf'))}
+time.start = as.POSIXct(date.start)
+time.end = as.POSIXct(date.end) + 60*(24*60-mins.radar)	
+times.all = seq(time.start,time.end,by=paste0(mins.radar,' mins'))
+
+agg = list()
+for (aggPeriod in aggPeriod_list){
+  agg[[aggPeriod]] = list()
+  agg[[aggPeriod]]$times.start = seq(time.start,time.end,aggPeriod)
+  agg[[aggPeriod]]$times.end = seq(agg[[aggPeriod]]$times.start[2]-mins.radar*60,time.end,aggPeriod)
+  agg[[aggPeriod]]$n_aggs = length(agg[[aggPeriod]]$times.start)
+  agg[[aggPeriod]]$times_per_agg = length(times.all)/agg[[aggPeriod]]$n_aggs
+}
+
+if (make_plots){pdf(file=paste0(fig.dirname,'radar.pdf'))}
 
 col = colorRampPalette(c("white", "blue", "cyan", "green","yellow","orange","red","brown","black"))(50)
 
 #####################################################################
+# read in a single precip raster. this will be used to calculate coordinates.
 
-prefix.date = paste0(prefix,format(date.start,'%Y%m%d'),'.prcp-c5')
+if ( (radar=='BuckPk') & (prcp=='prcp-c5') ){
+  prefix = paste0(data.dirname,'BuckPk/prcp-c5/BuckPk.64.')
+  num = 64
+} else if ( (radar=='Sellicks') & (prcp=='prcp-c5') ){
+  prefix = paste0(data.dirname,'Sellicks/prcp-c5/Sellick.46.')
+  num = 46
+}
+
+if (prcp=='prcp-c5'){
+  prefix.date = paste0(prefix,format(date.start,'%Y%m%d'),'.prcp-c5')
+}
 tar.date = paste0(prefix.date,'.tar')
 dirname.date = paste0(prefix.date,'/')
 untar(tarfile=tar.date,exdir=dirname.date)
@@ -120,130 +140,187 @@ date.vec = seq(date.start,date.end,by='days')
 
 date.fmt = format(seq(date.start,date.end,by='days'),'%Y%m%d')
 
-P_max_all_vec = P_sites_mat = P_max_GA_vec = P_max_box_vec = date_str_vec = c()
+P_max_all_vec = P_max_box_vec = rep(NA,length(times.all))
+P_sites_mat = matrix(nrow=length(times.all),ncol=dim(coords_latlon)[1])
 
-#for (date. in date.fmt){
-for (d in 1:length(date.vec)){
-
-  date. = date.vec[d]
-
-  print(date.)
-
-  date.fmt = format(date.,'%Y%m%d')
-
-#prefix.date = paste0(prefix,format(date.start,'%Y%m%d'),'.prcp-c5')
-#tar.date = paste0(prefix.date,'.tar')
-#dirname.date = paste0(prefix,'/')
-
-  prefix.date = paste0(prefix,date.fmt,'.prcp-c5')
-  tar.date = paste0(prefix.date,'.tar')
-  dirname.date = paste0(prefix.date,'/')
-
-  if (file.exists(tar.date)){
-
-    o = untar(tarfile=tar.date,exdir=dirname.date)
-  #if (o!=0){
-  #  cat('problem loading ',tar.date,'/n')
-  #}
-
-    fname = paste0(dirname.date,'_file_list')
-
-  #if (file.exists(fname)){
-
-    d = read.csv(fname,header=F)
-
-    filenames = paste0(dirname.date,d[,1])
-    filenames = sort(filenames)
-
-print(filenames)
-
-pause
-
-    for (i in 1:length(filenames)){
-      fn = filenames[i]
-    
-      a=strsplit(fn,'[/]')
-
-      date_str = substr(a[[1]][length(a[[1]])],4,18)
- 
-      print(date_str)
- 
-      date_str_vec = c(date_str_vec,date_str)
-
-      p_raster_xy <- rast(fn)
-    
-      p_raster_latlon = terra::project(p_raster_xy,crs(SA_boundary_latlon))
-
-      P_all = values(p_raster_latlon)
-      P_max_all = max(P_all,na.rm=T)
-      P_max_all_vec = c(P_max_all_vec,P_max_all)
-  
-      P_sites = terra::extract(x=p_raster_xy,y=coords_xy_vect)$precipitation
-      P_sites_mat = rbind(P_sites_mat,P_sites)
-  
-      P_GA = terra::extract(p_raster_latlon,GA_boundary_latlon)$precipitation
-      P_max_GA = max(P_GA,na.rm=T)
-      P_max_GA_vec = c(P_max_GA_vec,P_max_GA)
-      
-      P_box = crop(p_raster_latlon,extent_box_latlon)
-      P_max_box = max(values(P_box),na.rm=T)
-      P_max_box_vec = c(P_max_box_vec,P_max_box)
-      
-      if (make_plots){
-  
-        plot(p_raster_latlon,range=c(0,2),col=col)
-        
-        # location of max radar rainfall
-        if (P_max_all>0.2){
-          i=which(P_all==P_max_all)
-          xy = xyFromCell(p_raster_latlon,i)
-          points(xy,col='green',cex=5)
-        }
-  
-        # greater Adelaide boundary
-        lines(GA_boundary_latlon,col='red')
-        
-        # location of max GA radar rainfall
-        if (P_max_GA>0.2){
-          i=which(P_all==P_max_GA)
-          xy = xyFromCell(p_raster_latlon,i)
-          points(xy,col='red',cex=4)
-        }
-  
-        lines(box_latlon,col='orange')
-        
-        # location of max box radar rainfall
-        if (P_max_box>0.2){
-          i=which(P_all==P_max_box)
-          xy = xyFromCell(p_raster_latlon,i)
-          points(xy,col='orange',cex=4)
-        }
-        
-        # Adelaide airport
-        points(x=sites.lon,y=sites.lat,col='magenta',cex=1,pch=15)
-  
-        # state boundary
-        lines(SA_boundary_latlon)
-        
-        title(a[[1]][length(a[[1]])])
-  
-      }
-    } 
-  }
-  unlink(dirname.date, recursive = TRUE)
+for (aggPeriod in aggPeriod_list){
+#  agg[[aggPeriod]]$P_all_sum = agg[[aggPeriod]]$P_all_count = agg[[aggPeriod]]$t = 0.
+  agg[[aggPeriod]]$P_all_count = agg[[aggPeriod]]$t = 0.
+  agg[[aggPeriod]]$P_max_all_vec = agg[[aggPeriod]]$P_max_box_vec = 
+	  rep(NA,agg[[aggPeriod]]$n_agg)
+  agg[[aggPeriod]]$P_sites_mat = matrix(nrow=agg[[aggPeriod]]$n_agg,ncol=dim(coords_latlon)[1])
 }
 
-out = list(P_max_all_vec = P_max_all_vec,
-           P_sites_mat = P_sites_mat,
-           P_max_GA_vec = P_max_GA_vec,
-           P_max_box_vec = P_max_box_vec,
-           date_str_vec = date_str_vec)
+for (t in 1:length(times.all)){
 
-date_str_first = date_str_vec[1]
-date_str_last = date_str_vec[length(date_str_vec)]
+  time. = times.all[t]
+
+  if (as.integer(format(time.,'%H%M'))==0){
+
+    date. = as.Date(time.)   
+    print(date.)
+
+    date.fmt = format(date.,'%Y%m%d')
+
+    if (prcp=='prcp-c5'){
+      prefix.date = paste0(prefix,date.fmt,'.prcp-c5')
+    }
+    tar.date = paste0(prefix.date,'.tar')
+    dirname.date = paste0(prefix.date,'/')
+
+    if (file.exists(tar.date)){
+      untar(tarfile=tar.date,exdir=dirname.date)
+    }
+
+  }
+  
+  fn = paste0(dirname.date,num,'_',date.fmt,'_',format(time.,'%H%M%S'),'.',prcp,'.nc')
+    
+  if (file.exists(fn)){
+
+    p_raster_xy <- rast(fn)
+    
+    p_raster_latlon = terra::project(p_raster_xy,crs(SA_boundary_latlon))
+
+    P_all = values(p_raster_latlon)
+    P_max_all = max(P_all,na.rm=T)
+    P_max_all_vec[t] = P_max_all
+
+    P_sites = terra::extract(x=p_raster_xy,y=coords_xy_vect)$precipitation
+    P_sites_mat[t,] = P_sites
+
+#    P_GA = terra::extract(p_raster_latlon,GA_boundary_latlon)$precipitation
+#    P_max_GA = max(P_GA,na.rm=T)
+#    P_max_GA_vec[t] = P_max_GA
+
+    P_box = crop(p_raster_latlon,extent_box_latlon)
+    P_max_box = max(values(P_box),na.rm=T)
+    P_max_box_vec[t] = P_max_box
+
+    for (aggPeriod in aggPeriod_list){
+#      agg[[aggPeriod]]$P_all_sum = agg[[aggPeriod]]$P_all_sum + P_all
+      if (is.null(agg[[aggPeriod]]$p_raster_xy_sum)){
+        agg[[aggPeriod]]$p_raster_xy_sum = p_raster_xy
+      } else {
+        agg[[aggPeriod]]$p_raster_xy_sum = agg[[aggPeriod]]$p_raster_xy_sum + p_raster_xy
+      }
+      agg[[aggPeriod]]$P_all_count = agg[[aggPeriod]]$P_all_count + 1
+    }
+
+    if (make_plots){
+  
+      plot(p_raster_latlon,range=c(0,2),col=col)
+        
+      # location of max radar rainfall
+      if (P_max_all>0.2){
+        i=which(P_all==P_max_all)
+        xy = xyFromCell(p_raster_latlon,i)
+        points(xy,col='green',cex=5)
+      }
+  
+      # greater Adelaide boundary
+      #lines(GA_boundary_latlon,col='red')
+        
+      # location of max GA radar rainfall
+      #if (P_max_GA>0.2){
+      #  i=which(P_all==P_max_GA)
+      #  xy = xyFromCell(p_raster_latlon,i)
+      #  points(xy,col='red',cex=4)
+      #}
+  
+      lines(box_latlon,col='orange')
+        
+      # location of max box radar rainfall
+      if (P_max_box>0.2){
+        i=which(P_all==P_max_box)
+        xy = xyFromCell(p_raster_latlon,i)
+        points(xy,col='orange',cex=4)
+      }
+        
+      # stations
+      points(x=sites.lon,y=sites.lat,col='magenta',cex=1,pch=15)
+  
+      # state boundary
+      lines(SA_boundary_latlon)
+        
+      title(a[[1]][length(a[[1]])])
+  
+    }
+  } else {
+
+    cat(fn,' does not exist\n') 
+
+  }
+
+  #if (as.integer(format(time.,'%H%M'))==2355){
+  #  unlink(dirname.date, recursive = TRUE)
+  #}
+
+  for (aggPeriod in aggPeriod_list){
+
+    if (time. %in% agg[[aggPeriod]]$times.end){
+
+      agg[[aggPeriod]]$t = agg[[aggPeriod]]$t + 1
+
+      if (agg[[aggPeriod]]$P_all_count > agg_data_thresh*agg[[aggPeriod]]$times_per_agg) {
+
+        p_raster_xy = agg[[aggPeriod]]$p_raster_xy_sum / agg[[aggPeriod]]$P_all_count * agg[[aggPeriod]]$times_per_agg
+
+        p_raster_latlon = terra::project(p_raster_xy,crs(SA_boundary_latlon))
+
+        P_all = values(p_raster_latlon)
+
+#        P_all = agg[[aggPeriod]]$P_all_sum / agg[[aggPeriod]]$P_all_count * agg[[aggPeriod]]$n      
+        P_max_all = max(P_all,na.rm=T)
+        agg[[aggPeriod]]$max_all_vec[agg[[aggPeriod]]$t] = P_max_all
+
+        P_sites = terra::extract(x=p_raster_xy,y=coords_xy_vect)$precipitation
+        agg[[aggPeriod]]$P_sites_mat[agg[[aggPeriod]]$t,] = P_sites
+
+        #P_GA = terra::extract(p_raster_latlon,GA_boundary_latlon)$precipitation
+        #P_max_GA = max(P_GA,na.rm=T)
+        #agg[[aggPeriod]]$P_max_GA_vec[agg[[aggPeriod]]$t] = P_max_GA
+
+        P_box = crop(p_raster_latlon,extent_box_latlon)
+        P_max_box = max(values(P_box),na.rm=T)
+        agg[[aggPeriod]]$P_max_box_vec[agg[[aggPeriod]]$t] = P_max_box
+
+      } else {
+
+	agg[[aggPeriod]]$max_all_vec[agg[[aggPeriod]]$t] = NA
+        agg[[aggPeriod]]$P_sites_mat[agg[[aggPeriod]]$t,] = NA
+        #agg[[aggPeriod]]$P_max_GA_vec[agg[[aggPeriod]]$t] = NA
+        agg[[aggPeriod]]$P_max_box_vec[agg[[aggPeriod]]$t] = NA
+
+      }
+
+#      agg[[aggPeriod]]$P_all_sum = agg[[aggPeriod]]$P_all_count = 0
+      agg[[aggPeriod]]$P_all_count = 0
+      agg[[aggPeriod]]$p_raster_xy_sum = NULL
+
+    }
+  }
+}
+
+for (aggPeriod in aggPeriod_list){
+  agg[[aggPeriod]]$p_raster_xy_sum = agg[[aggPeriod]]$P_all_count = NULL
+}
+
+#out = list(P_max_all_vec = P_max_all_vec,
+#           P_sites_mat = P_sites_mat,
+#           P_max_GA_vec = P_max_GA_vec,
+#           P_max_box_vec = P_max_box_vec,
+#	   times.all = times.all,
+#	   agg)
+
+rm(p_raster_xy, p_raster_latlon, P_all, P_max_all, P_sites, P_box, P_max_box,
+   tar.date,fn,fname,p_raster_xy_base,time.,aggPeriod,d,date.,filenames,g,prefix.date,t)
+
+date_str_first = format(times.all[1],'%Y%m%d')
+date_str_last = format(times.all[length(times.all)],'%Y%m%d')
 
 fname = paste0(RData.dirname,'out.',radar,'.',date_str_first,'.',date_str_last,'.RData')
-save(file=fname,out)
+save.image(file=fname)
 
 ##############
 
