@@ -1,12 +1,17 @@
-dirname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/20240724_BOM_subdaily_rainfall_radar/BuckPk/prcp-c5/'
+#dirname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/20240724_BOM_subdaily_rainfall_radar/BuckPk/prcp-c5/'
+dirname = '../../../Data/Radar/BuckPk/prcp-c5/'
 
 files = list.files(dirname)
 
-date_str = strsplit(files[1],"[.]")[[1]][3]
-first.date = as.Date(date_str,format='%Y%m%d')
+#date_str = strsplit(files[1],"[.]")[[1]][3]
+#first.date = as.Date(date_str,format='%Y%m%d')
 
-date_str = strsplit(files[length(files)],"[.]")[[1]][3]
-last.date = as.Date(date_str,format='%Y%m%d')
+#date_str = strsplit(files[length(files)],"[.]")[[1]][3]
+#last.date = as.Date(date_str,format='%Y%m%d')
+
+first.date = as.Date('2020/01/01')
+last.date = as.Date('2020/12/31')
+
 all_dates = seq(first.date,last.date,by='days')
 
 all_dates_str = format(all_dates,'%Y%m%d')
