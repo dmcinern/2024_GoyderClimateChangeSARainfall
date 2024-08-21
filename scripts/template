@@ -1,0 +1,9 @@
+#!/bin/bash
+#SBATCH -p batch
+#SBATCH -J extract_radar
+#SBATCH -o extract_radar.%j.out
+#SBATCH -N 1              	                                # number of nodes (use a single node)
+#SBATCH -n 1             	                                # number of cores (sequential job uses 1 processor)
+#SBATCH --time=3:00:00    	                                # time allocation, which has the format (D-HH:MM:SS), here set to 1 hour
+#SBATCH --mem=32GB         	                                # memory pool for all cores (here set to 32 GB)
+Rscript calc_spat_max_radar.R XXX_radar_XXX XXX_year_XXX XXX_month_XXX
