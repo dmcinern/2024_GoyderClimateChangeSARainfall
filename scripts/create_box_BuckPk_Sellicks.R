@@ -23,14 +23,28 @@ lines(Greater_Ade_border,col='grey')
 
 # col = colorRampPalette(c("white", "blue", "cyan", "green","yellow","orange","red","brown","black"))(50)
 
-coords <- data.frame(lon=138.5196, lat=-34.9524)
-pts <- vect(coords, crs="+proj=longlat")
-Airport <- project(pts, crs(SA_border))
-#x = xmin(lccpts); y = ymin(lccpts)
-#xx=colFromX(p_raster, x)
-#yy=rowFromY(p_raster, y)
-points(Airport,col='red')
+# coords <- data.frame(lon=138.5196, lat=-34.9524)
+# pts <- vect(coords, crs="+proj=longlat")
+# Airport <- project(pts, crs(SA_border))
+# #x = xmin(lccpts); y = ymin(lccpts)
+# #xx=colFromX(p_raster, x)
+# #yy=rowFromY(p_raster, y)
+# points(Airport,col='red')
 
+
+sites.lon = c(138.5196,
+              138.6216,
+              138.6223,
+              138.5751)
+sites.lat = c(-34.9524,
+              -34.9211,
+              -34.7111,
+              -35.4123)
+
+coords_latlon <- data.frame(lon=sites.lon, lat=sites.lat)
+coords_latlon_vect <- vect(coords_latlon, crs="+proj=longlat")
+
+points(coords_latlon_vect,col='red')
 
 radius = 100000
 delta = 128000
@@ -43,10 +57,10 @@ for (r in 1:length(radar_list)){
   radar = radar_list[r]
     
   if (radar=='BuckPk'){
-    dirname = paste0(data.dirname,'BuckPk/tmp/')
+    dirname = paste0(data.dirname,'Working/BuckPk/prcp-c5/')
     prefix = paste0(dirname,'BuckPk.64.')
   } else {
-    dirname = paste0(data.dirname,'Sellicks/tmp/')
+    dirname = paste0(data.dirname,'Working/Sellicks/prcp-c5/')
     prefix = paste0(dirname,'Sellick.46.')
   }
   
@@ -72,7 +86,8 @@ for (r in 1:length(radar_list)){
   
 }
 
-lon_min = 138.5; lon_max = 139
+#lon_min = 138.5; lon_max = 139
+lon_min = 138.25; lon_max = 139
 lat_min = -35.5; lat_max = -34.5
 
 d_lon = lon_max-lon_min; d_lat = lat_max-lat_min
@@ -84,7 +99,8 @@ coords <- data.frame(lon=lon,lat=lat)
 box <- vect(coords, crs=crs(SA_border))
 lines(box,col='magenta')
 
-
+extent = ext(lon_min,lon_max,lat_min,lat_max)
+aa=crop(p_raster,extent)
 pause
 
 
@@ -125,7 +141,7 @@ for (date. in date.fmt){
     #image.plot(P,main=as.character(d[i,1]),ylim=c(0,4))
 
     p_raster <- rast(fn)
-    p_raster_1 = terra::project(p_raster,crs(p))
+    p_raster_1 = terra::project(p_raster,crs(SA_border))
 
     #oz::sa(add=T)
     #Pmax = c(Pmax,max(P,na.rm=T))
@@ -134,7 +150,7 @@ for (date. in date.fmt){
 
     Pmax = c(Pmax,max(P,na.rm=T))
 
-    Ps = terra::extract(x=p_raster,y=lccpts)$precipitation
+    Ps = terra::extract(x=p_raster,y=Greater_Ade_border)$precipitation
 
     #Psite = c(Psite,extract(x=p_raster,y=matrix(c(xx,yy),nrow = 1)))
     Psite = c(Psite,Ps)

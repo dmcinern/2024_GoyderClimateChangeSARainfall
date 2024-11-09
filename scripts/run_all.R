@@ -1,16 +1,12 @@
- # TO DO
-# - phoenix
-# - update github
-# - manually check missing data periods - parafield airport pluvio
-
 rm(list=ls())
 
-setwd("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall/scripts/")
-
+#setwd("C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/3_Tasks/R_code/2024_GoyderClimateChangeSARainfall/scripts/")
+setwd('C:/Users/a1065639/Work/2024_GoyderClimateChangeSARainfall/scripts/')
 source('settings.R')
 
-# pluvio and AWS all years and plot both
-# site_list = c('023034','023090','023083','023013')
+# #pluvio and AWS all years and plot both
+# # site_list = c('023034','023090','023083','023013')
+# # pdf_str = 'both'
 # instrument_list = c('pluvio','AWS')
 # plot.instrument_list = instrument_list
 # plot.year.min = plot.year.max = NULL
@@ -18,35 +14,76 @@ source('settings.R')
 # plot_linear = F
 # x.index = 'year'
 # # x.index = 'GMT'
-# pdf_str = 'both'
-
+# # 
+# # site_list = c('026021','016001')
+# # pdf_str = 'both_regional'
+# 
+# combine_sources_sites = F
+# 
+# site_list = c('24024')
+# pdf_str = 'both_loxton'
 
 # # blended pluvio and AWS
-site_list = c('023034','023090','023013')
+# site_list = c('023034','023090','023013')
+# nearbySite_list = list('023034'='023090','023090'='023034','023013'='023090')
 #site_list = c('023034')
-instrument_list = c('pluvio','AWS')
-plot.instrument_list = c('AWS_pluvio')
-plot.year.min = 1978
-plot.year.max = 2023
-blend = T
-plot_linear = T
-#x.index = 'year'
-x.index = 'GMT'
-#pdf_str = 'AWS_pluvio'
+#nearbySite_list = list('023034'='023090')
+Instrument_list = c('pluvio','AWS')
+#instrument_list = c('AWS')
+Plot.year.min = 1978
+Plot.year.max = 2023
+Blend = T
+Combine_sources_sites = F
+Plot_linear = T
+X.index = 'year'
+#X.index = 'GMT'
+# 
+# plot.instrument_list = c('AWS_pluvio')
+# # pdf_str = 'AWS_pluvio'
+# 
+#plot.instrument_list = c('combo_sources_sites')
+# # pdf_str = 'combo_sources_sites'
+# 
+# 
+# #plot.year.max = 2019
+# #pdf_str = 'AWS_pluvio_2019'
+# 
 
-#plot.year.max = 2019
-#pdf_str = 'AWS_pluvio_2019'
+#site_list = c('023034','023090','023013','023823','023824')
+Site_list = c('023034','023090','023013','023823')
+#site_list = c('023034')
+NearbySite_list = list('023034'='023090',
+                       '023090'='023034',
+                       '023013'='023090',
+                       '023823'='023824',
+                       '023824'='023823')
 
-# site_list = c('023034','023090','023013','023823')
-# #site_list = c('023823')
+#site_list = c('023824')
+#site_list = c('023823')
 # pdf_str = 'AWS_pluvio_Hindmarsh'
 
-site_list = c('023034','023090','023083','023013')
-pdf_str = 'AWS_pluvio_Edinburgh'
+# site_list = c('023034','023090','023083','023013')
+# pdf_str = 'AWS_pluvio_Edinburgh'
+
+# site_list = c('026021')
+# pdf_str = 'AWS_pluvio_MtGamb'
+
+Combine_sources_sites = T
+Plot.instrument_list = c('combo_sources_sites')
+Pdf_str = 'combo_sources_sites_hindmarsh'
+
+# site_list = c('023034')
+# pdf_str = 'combo_sources_sites_tmp'
+
+
+# site_list = c('24024')
+# pdf_str = 'AWS_pluvio_loxton'
+
 
 
 # # AWS
-# site_list = c('023034','023090','023083','023013','023885')
+# #site_list = c('023034','023090','023083','023013','023885')
+# site_list = c('023034','023090','023013')
 # instrument_list = c('AWS')
 # plot.instrument_list = c('AWS')
 # plot.year.min = 2002
@@ -57,18 +94,31 @@ pdf_str = 'AWS_pluvio_Edinburgh'
 # x.index = 'GMT'
 # pdf_str = 'AWS'
 
-# # pluvio
+# pluvio
 # site_list = c('023034','023090','023083','023013',
 #               '023343','024515','023801','023823')#,'023763')
+# pdf_str = 'pluvio'
 # instrument_list = c('pluvio')
 # plot.instrument_list = c('pluvio')
 # plot.year.min = 1973
 # plot.year.max = 2017
 # blend = F
 # plot_linear = T
-# #x.index = 'year'
-# x.index = 'GMT'
-# pdf_str = 'pluvio'
+# x.index = 'year'
+# #x.index = 'GMT'
+# # 
+# # site_list = c('026021','018012','018116','021060','024515','026049','026082','016001','016032')
+# # pdf_str = 'pluvio_regional'
+# 
+# 
+# #site_list = c('023343','025006','023763','023801','023823','023824','026091')
+# #pdf_str = 'pluvio_another_set'
+# 
+# 
+# site_list = c('23843')
+# pdf_str = 'pluvio_heathfield'
+# 
+# combine_sources_sites = F
 
 
 #plot.instrument_list = instrument_list
@@ -121,7 +171,9 @@ pdf_str = 'AWS_pluvio_Edinburgh'
 
 #aggPeriod_list = c('1 hour')
 #aggPeriod_list = c('6 mins')
-aggPeriod_list = c('12 mins','30 mins','1 hour','3 hours','1 month')
+AggPeriod_list = c('12 mins','30 mins','1 hour','3 hours','1 month')
+#aggPeriod_list = c('30 mins')
+#aggPeriod_list = c('3 hours')
 #aggPeriod_list = c('1 hour','3 hours')
 # aggPeriod_list = c('30 mins','1 month')
 #aggPeriod_list = c('1 month')
@@ -139,22 +191,22 @@ aggPeriod_list = c('12 mins','30 mins','1 hour','3 hours','1 month')
 #instrument = 'AWS'
 #instrument = 'pluvio'
 
-load_raw_RData = T
-load_processed_RData = T
-load_agg_RData = T
-load_annual_metrics = T
+Load_raw_RData = T
+Load_processed_RData = T
+Load_agg_RData = T
+Load_annual_metrics = T
 
-agg_data_thresh = 0.8
-accum_handling = 'spread'
-missing_year_thresh = 0.1
+Agg_data_thresh = 0.8
+Accum_handling = 'spread'
+Missing_year_thresh = 0.1
 #metric_list = c('mean','max','P99','P99.9','EY1','EY3','EY6')
 #metric_list = c('mean','max','P99','P99.9','EY3','EY6')
-metric_list = c('mean','max','EY2','EY6')
+Metric_list = c('mean','max','EY2','EY6')
 #metric_list = c('mean','max')
 
-blend_type = 'AWS_pluvio'
+Blend_type = 'AWS_pluvio'
 
-blend_processed_data = F
+Blend_processed_data = F
 
 # plot.instrument_list = c('pluvio')
 # plot.year.min = 1972
@@ -168,65 +220,68 @@ blend_processed_data = F
 # plot.year.min = 1978
 # plot.year.max = 2024
 
-annual_metrics_list = agg_data_list = processed_data_list = blend_year_change = list()
+Missing_year_thresh = 0.01
+Nonsite_year_thresh = 0.1
 
-for (site in site_list){
+Annual_metrics_list = Agg_data_list = Processed_data_list = Blend_year_change = list()
 
-  cat(site,'\n')
+for (Site in Site_list){
 
-  annual_metrics_list[[site]] = agg_data_list[[site]] = processed_data_list[[site]] = list()
+  cat(Site,'\n')
 
-  for (instrument in instrument_list){
+  Annual_metrics_list[[Site]] = Agg_data_list[[Site]] = Processed_data_list[[Site]] = list()
 
-    cat(instrument,'\n')
+  for (Instrument in Instrument_list){
 
-    annual_metrics_list[[site]][[instrument]] = agg_data_list[[site]][[instrument]] = processed_data_list[[site]][[instrument]] = list()
+    cat(Instrument,'\n')
 
-    if (!load_processed_RData){
+    Annual_metrics_list[[Site]][[Instrument]] = Agg_data_list[[Site]][[Instrument]] = Processed_data_list[[Site]][[Instrument]] = list()
+
+    if (!Load_processed_RData){
       cat('loading data\n')
-      raw_data = load_raw_data(site=site,instrument=instrument,
-                               load_raw_RData=load_raw_RData,
-                               data_dirname=data_dirname,
-                               RData_dirname=RData_dirname) # matrix for pluvio, vector for aws
+      Raw_data = load_raw_data(site=Site,instrument=Instrument,
+                               load_raw_RData=Load_raw_RData,
+                               data_dirname=Data_dirname,
+                               rData_dirname=RData_dirname) # matrix for pluvio, vector for aws
     } else {
-      raw_data = list(raw_RData_fname = paste0(RData_dirname,instrument,'_',site,'.RData'))
-      if (!file.exists(raw_data$raw_RData_fname)){raw_data=NULL}
+      Raw_data = list(raw_RData_fname = paste0(RData_dirname,Instrument,'_',Site,'.RData'))
+      if (!file.exists(Raw_data$raw_RData_fname)){Raw_data=NULL}
     }
 
-    if (!load_agg_RData){
+    if (!Load_agg_RData){
       cat('processing data\n')
       # select years, get data in easy format, deal with QCs
-      processed_data = process_raw_data(raw_data=raw_data,
-                                        site=site,
-                                        instrument=instrument,
-                                        load_processed_RData=load_processed_RData,
-                                        accum_handling=accum_handling,
-                                        RData_dirname=RData_dirname)
+      Processed_data = process_raw_data(raw_data=Raw_data,
+                                        site=Site,
+                                        instrument=Instrument,
+                                        load_processed_RData=Load_processed_RData,
+                                        accum_handling=Accum_handling,
+                                        rData_dirname=RData_dirname)
 
     } else {
-      if (is.null(raw_data)){
-        processed_data=NULL
+      if (is.null(Raw_data)){
+        Processed_data=NULL
       } else {
 
-        processed_RData_fname = strsplit(raw_data$raw_RData_fname,'.RData',fixed=T)[[1]]
-        processed_RData_fname = paste0(processed_RData_fname,'_accumHandling.',accum_handling)
+        processed_RData_fname = strsplit(Raw_data$raw_RData_fname,'.RData',fixed=T)[[1]]
+        processed_RData_fname = paste0(processed_RData_fname,'_accumHandling.',Accum_handling)
         processed_RData_fname = paste0(processed_RData_fname,'_processed.RData')
-        processed_data = list(processed_RData_fname=processed_RData_fname)
+        Processed_data = list(processed_RData_fname=processed_RData_fname)
 
       }
 
     }
-    processed_data_list[[site]][[instrument]] = processed_data
+    Processed_data_list[[Site]][[Instrument]] = Processed_data
 
 #    if(blend){
-    if(blend_processed_data){
+    if(Blend_processed_data){
         cat('blending processed data\n')
 
-      if(instrument==instrument_list[length(instrument_list)]){
+      if(Instrument==Instrument_list[length(Instrument_list)]){
 
-        if (blend_type=='AWS_pluvio'){
+        if (Blend_type=='AWS_pluvio'){
 
-          p_pluvio = processed_data_list[[site]]$pluvio
+          p_pluvio = Processed_data_list[[Site]]$pluvio
           if (is.null(p_pluvio$date)){
             load(p_pluvio$processed_RData_fname)
             p_pluvio = out
@@ -248,47 +303,46 @@ for (site in site_list){
           p_blend$date = c(p_pluvio$date[keep_pluvio],p_aws$date)
           p_blend$P = c(p_pluvio$P[keep_pluvio],p_aws$P)
           p_blend$accPeriod = c(p_pluvio$accPeriod[keep_pluvio],p_aws$accPeriod)
-          blend_year_change[[site]] = min(year_aws)
+          Blend_year_change[[Site]] = min(year_aws)
         }
 
-        processed_data_list[[site]][[blend_type]] = p_blend
+        Processed_data_list[[Site]][[Blend_type]] = p_blend
 
         #          annual_metrics_list[[site]][[blend_type]][[aggPeriod]] = blend_metrics(annual_metrics_list[[site]],blend_type,aggPeriod)
       }
     }
 
-    for (aggPeriod in aggPeriod_list){
+    for (AggPeriod in AggPeriod_list){
 
-      cat(aggPeriod,'\n')
+      cat(AggPeriod,'\n')
 
       cat('aggregating data\n')
-      agg_data = aggregate_data(processed_data=processed_data,
-                                aggPeriod=aggPeriod,
-                                load_agg_data=load_agg_data,
-                                RData_dirname=RData_dirname,
-                                agg_data_thresh=agg_data_thresh)
+      Agg_data = aggregate_data(processed_data=Processed_data,
+                                aggPeriod=AggPeriod,
+                                load_agg_RData=Load_agg_RData,
+                                agg_data_thresh=Agg_data_thresh)
 
-      agg_data_list[[site]][[instrument]][[aggPeriod]] = agg_data
+      Agg_data_list[[Site]][[Instrument]][[AggPeriod]] = Agg_data
 
       cat('calculating metrics\n')
-      annual_metrics = calc_annual_metrics(agg_data=agg_data,
-                                           metric_list=metric_list,
-                                           load_annual_metrics=load_annual_metrics)
+      Annual_metrics = calc_annual_metrics(agg_data=Agg_data,
+                                           metric_list=Metric_list,
+                                           load_annual_metrics=Load_annual_metrics)
 
-      annual_metrics_list[[site]][[instrument]][[aggPeriod]] = annual_metrics
+      Annual_metrics_list[[Site]][[Instrument]][[AggPeriod]] = Annual_metrics
 
-      if(blend){
+      if(Blend){
         cat('blending metrics\n')
 
-        if(instrument==instrument_list[length(instrument_list)]){
+        if(Instrument==Instrument_list[length(Instrument_list)]){
 
-          if (blend_type=='AWS_pluvio'){
+          if (Blend_type=='AWS_pluvio'){
 
-            m_aws = annual_metrics_list[[site]]$AWS[[aggPeriod]]
-            m_pluvio = annual_metrics_list[[site]]$pluvio[[aggPeriod]]
+            m_aws = Annual_metrics_list[[Site]]$AWS[[AggPeriod]]
+            m_pluvio = Annual_metrics_list[[Site]]$pluvio[[AggPeriod]]
 
-            a_pluvio = agg_data_list[[site]]$pluvio[[aggPeriod]]
-            a_aws = agg_data_list[[site]]$AWS[[aggPeriod]]
+            a_pluvio = Agg_data_list[[Site]]$pluvio[[AggPeriod]]
+            a_aws = Agg_data_list[[Site]]$AWS[[AggPeriod]]
 
             if (is.null(m_aws)){
               m_blend = m_pluvio
@@ -322,19 +376,42 @@ for (site in site_list){
               a_blend = list()
               a_blend$date = c(a_pluvio$date[keep_pluvio],a_aws$date)
               a_blend$P = c(a_pluvio$P[keep_pluvio],a_aws$P)
-              blend_year_change[[site]] = min(year_aws)
+              Blend_year_change[[Site]] = min(year_aws)
 
             }
 
 
           }
 
-          annual_metrics_list[[site]][[blend_type]][[aggPeriod]] = m_blend
-          agg_data_list[[site]][[blend_type]][[aggPeriod]] = a_blend
+          Annual_metrics_list[[Site]][[Blend_type]][[AggPeriod]] = m_blend
+          Agg_data_list[[Site]][[Blend_type]][[AggPeriod]] = a_blend
 
           #annual_metrics_list[[site]][[blend_type]][[aggPeriod]] = blend_metrics(annual_metrics_list[[site]],blend_type,aggPeriod)
         }
       }
+      
+      if (Combine_sources_sites){
+        cat('merging agg data multiple sources/sites\n')
+        # source('combine_sites_source.R')
+        # agg_data_list[[site]][['combo_sources_sites']][[aggPeriod]] = combo_aggData
+        Combo_aggData = combine_sites_sources(site=Site,
+                                              aggPeriod=AggPeriod,
+                                              plot.year.min=Plot.year.min,
+                                              plot.year.max=Plot.year.max,
+                                              rData_dirname=RData_dirname,
+                                              accum_handling=Accum_handling,
+                                              agg_data_thresh=Agg_data_thresh,
+                                              nearbySite_list=NearbySite_list)
+        
+        
+        Agg_data_list[[Site]][['combo_sources_sites']][[AggPeriod]]  = Combo_aggData
+          
+        annual_metrics = calc_annual_metrics_core(agg_data=Combo_aggData,
+                                                  metric_list=Metric_list)
+        
+        Annual_metrics_list[[Site]][['combo_sources_sites']][[AggPeriod]] = annual_metrics
+      }
+
 
     }
 
@@ -343,13 +420,13 @@ for (site in site_list){
   }
 }
 
-instrument_list = c(instrument_list,blend_type)
+instrument_list = c(Instrument_list,Blend_type,'combo_sources_sites')
 
 #############################
 
 cat('plotting\n')
 
-plot.aggPeriod_list = aggPeriod_list[aggPeriod_list!='1 month']
+Plot.aggPeriod_list = AggPeriod_list[AggPeriod_list!='1 month']
 
 #############################
 
@@ -389,9 +466,9 @@ plot.aggPeriod_list = aggPeriod_list[aggPeriod_list!='1 month']
 
 #############################
 
-pdf_fname = paste0(fig_dirname,'summary_',pdf_str,'_',x.index,'.pdf')
+Pdf_fname = paste0(Fig_dirname,'summary_',Pdf_str,'_',X.index,'.pdf')
 
-pdf(file=pdf_fname)
+pdf(file=Pdf_fname)
 
 
 # #aggPeriod = '30 mins'
@@ -414,7 +491,7 @@ pdf(file=pdf_fname)
 #
 #         if (!is.na(dates_plot[y])){
 #
-#           date_plot = as.POSIXct(dates_plot[y],origin= "1970-01-01",tz = 'GMT')
+#           date_plot = as.POSIXct(dates_plot[y],origin= "1970-01-01",tz = 'UTC')
 #
 #           a = agg_data_list[[site]][[instrument]][[aggPeriod]]
 #           date_agg = a$date
@@ -464,51 +541,21 @@ pdf(file=pdf_fname)
 #############################
 
 
+o = plot_annual_metrics_multi(annual_metrics_list=Annual_metrics_list,
+                              site_list=Site_list,
+                              plot.aggPeriod_list=Plot.aggPeriod_list,
+                              metric_list=Metric_list,
+                              plot.instrument_list=Plot.instrument_list,
+                              missing_year_thresh=Missing_year_thresh,
+                              nonsite_year_thresh=Nonsite_year_thresh,
+                              x.index=X.index,
+                              plot_linear=Plot_linear,
+                              plot.year.min=Plot.year.min,
+                              plot.year.max=Plot.year.max,
+                              combine_sources_sites=Combine_sources_sites,
+                              site_labels = Site_labels)
 
-
-
-slopeArray = slopeArrayLow = slopeArrayHigh = pValArray = nPoints = array(dim=c(length(site_list),
-                                     length(plot.aggPeriod_list),
-                                     length(metric_list),
-                                     length(plot.instrument_list)))
-for (s in 1:length(site_list)){
-  site = site_list[s]
-  #  o[[site]] = list()
-  #  pdf_fname = paste0(fig_dirname,'summary_',site,'.pdf')
-  #  pdf(pdf_fname)
-  for (a in 1:length(plot.aggPeriod_list)){
-    aggPeriod = plot.aggPeriod_list[a]
-    par(mfrow=c(4,2),mar=c(3,4,2.5,1),oma=c(1,1,3,1))
-    o = plot_annual_metrics(annual_metrics_list=annual_metrics_list,
-                            site=site,
-                            aggPeriod=aggPeriod,
-                            instrument_list=plot.instrument_list,
-                            missing_year_thresh = missing_year_thresh,
-                            year.min=plot.year.min,year.max=plot.year.max,
-                            x.index=x.index,plot_linear = plot_linear)
-    slopeArray[s,a,,] = o$slopeMat/o$metComboMeanVec
-    pValArray[s,a,,] = o$pValMat
-    nPoints[s,a,,] = o$nPoints
-    slopeArrayLow[s,a,,] = o$slopeMatLow/o$metComboMeanVec
-    slopeArrayHigh[s,a,,] = o$slopeMatHigh/o$metComboMeanVec
-
-    # par(mfrow=c(2,3),mar=c(4,4,3,1))
-    # xmetric = 'mean'
-    # allMetrics = colnames(annual_metrics_list[[1]][[1]][[1]]$metrics)
-    # yMetricList = allMetrics[!(allMetrics==xmetric)]
-    # for (ymetric in yMetricList){
-    #   plot_annual_metrics_cor(annual_metrics_list=annual_metrics_list,
-    #                           xmetric=xmetric,
-    #                           ymetric=ymetric,
-    #                           instrument_list=instrument_list,
-    #                           aggPeriod=aggPeriod,
-    #                           missing_year_thresh=missing_year_thresh)
-    # }
-  }
-  #  dev.off()
-}
-
-
+SlopeArray=o$slopeArray;PValArray=o$pValArray;NPoints=o$nPoints;SlopeArrayLow=o$slopeArrayLow;SlopeArrayHigh=o$slopeArrayHigh
 
 # for (s in 1:length(site_list)){
 #   site = site_list[s]
@@ -529,83 +576,24 @@ for (s in 1:length(site_list)){
 # }
 
 
-nYears = plot.year.max-plot.year.min+1
-
-colData = 'lightblue'
-colARR = 'salmon'
-
-if (x.index=='GMT'){
-  xlab = '%/degC'
-  xlim = c(-20,70)
-  #  xlim = c(-15,50)
-} else if (x.index=='year'){
-  xlim = c(-0.3,0.7)
-  xlab = '%/year'
-}
-
-#  for (plot.instrument in plot.instrument_list){
-#    i = which(plot.instrument == instrument_list)
-for (i in 1:length(plot.instrument_list)){
-  plot.instrument = plot.instrument_list[i]
-  for (m in 1:length(metric_list)){
-    metric = metric_list[m]
-    #      par(mfrow=c(2,2),mar=c(5,4,2,1))
-    par(mfrow=c(4,1),mar=c(3,5,2,1),oma=c(1,1,2,1))
-    for (a in 1:length(plot.aggPeriod_list)){
-      aggPeriod = plot.aggPeriod_list[a]
-      #dat = slopeArray[,a,m,i]*100
-      #cols = rep('grey',length(site_list))
-      # cols[pValArray[,a,m,i]<0.25] = 'lightblue'
-      # cols[pValArray[,a,m,i]<0.05] = 'blue'
-      #labs = site_list
-      # i1 = which ((nPoints[,a,m,i] / nYears ) < 0.8 )
-      # labs[i1]=paste0(labs[i1],'*')
-      # i2 = which ((nPoints[,a,m,i] / nYears ) < 0.9 )
-      # labs[i2]=paste0(labs[i2],'*')
-
-      # barplot(dat,main=plot.aggPeriod_list[a],
-      #         col=cols,horiz = T,names.arg = labs,las=2,xlab=xlab,xlim=xlim)
-
-      #browser()
-
-      z = list()
-      z$stats = 100*rbind(slopeArrayLow[,a,m,i],
-                          slopeArrayLow[,a,m,i],
-                          slopeArray[,a,m,i],
-                          slopeArrayHigh[,a,m,i],
-                          slopeArrayHigh[,a,m,i])
-      z$names = site_list
-
-      if (metric!='mean'){
-        if (aggPeriod%in%c("12 mins","30 mins","1 hour")){
-          low = 7
-          med = 15
-          high = 28
-        } else if (aggPeriod=='3 hours'){
-          med = approx(x=c(1,24),y = c(15,8),xout = 3)$y
-          low = approx(x=c(1,24),y = c(7,2),xout = 3)$y
-          high = approx(x=c(1,24),y = c(28,15),xout = 3)$y
-        }
-        z$stats = cbind(z$stats,c(low,low,med,high,high))
-        z$names = c(z$names,'ARR')
-      }
-      bxp(z,horizontal = T,las=2,xlab='',ylim=xlim,main=plot.aggPeriod_list[a],
-          boxfill=c(rep(colData,length(site_list)),colARR),cex.axis=0.75)
-      mtext(side=1,text = xlab,cex=0.75,line=2)
-    }
-    title(paste(plot.instrument,metric_list[m]),outer=T)
-  }
-}
+plot_trends_boxes(plot.year.min=Plot.year.min,
+                  plot.year.max=Plot.year.max, 
+                  x.index=X.index,
+                  plot.instrument_list=Plot.instrument_list,
+                  metric_list=Metric_list,
+                  plot.aggPeriod_list=Plot.aggPeriod_list,
+                  slopeArrayLow=SlopeArrayLow,
+                  slopeArray=SlopeArray,
+                  slopeArrayHigh=SlopeArrayHigh,
+                  site_list=Site_list)
 
 #############################################
 
 fname = 'C:/Users/a1065639/Box/2024_GoyderClimateChangeSARainfall/8_Data_External/monthly_HQ/rain.023721.monthly.txt'
 d = read.table(fname,skip=1)
-
-date_start = as.Date('1863/01/01')
-date_end = as.Date('2023/10/01')
-date0 = seq(date_start,date_end,by='months')
-
+Date_start = as.Date('1863/01/01')
+Date_end = as.Date('2023/10/01')
+Date0 = seq(Date_start,Date_end,by='months')
 P0 = d$V3
 
 # date0 = dates
@@ -631,82 +619,7 @@ P0 = d$V3
 
 ########
 
-plot_double_mass = function(P1,date1,P2,date2,
-                            year.min=NULL,year.max=NULL,
-                            xlab,ylab,instrumentChange=NULL,blend_year_change=NULL){
 
-  if (is.null(year.min)){year.min=-99999}
-  if (is.null(year.max)){year.max=99999}
-
-  year1 = as.integer(format(date1,'%Y'))
-  year2 = as.integer(format(date2,'%Y'))
-
-  year.min = max(year.min,min(year1),min(year2))
-  year.max = min(year.max,max(year1),max(year2))
-
-  print(year.min)
-  print(year.max)
-
-  keep1 = which((year1>=year.min)&(year1<=year.max))
-  P1 = P1[keep1]
-  date_keep = date1[keep1]
-
-  keep2 = which((year2>=year.min)&(year2<=year.max))
-  P2 = P2[keep2]
-
-  Jan1 = which((format(date_keep,'%d/%m')=='01/01')&((as.integer(format(date_keep,'%Y'))%%5)==0))
-  Lab = as.integer(format(date_keep,'%Y'))[Jan1]
-
-  i_instrumentChange = which(format(date_keep,'%Y/%m')%in%format(instrumentChange$dates,'%Y/%m'))
-
-  i_blend_year_change = c()
-  if(!is.null(blend_year_change)){
-    print(blend_year_change)
-    if (!is.na(blend_year_change)){
-      i_blend_year_change = min(which(as.integer(format(date_keep,'%Y'))==blend_year_change))
-    }
-  }
-
-
-  # P1[is.na(P1)] = P2[is.na(P1)]
-  # P2[is.na(P2)] = P1[is.na(P2)]
-  #
-  # P1[is.na(P1)] = P2[is.na(P2)] = 0.
-
-  P2[is.na(P1)] = NA
-  P1[is.na(P2)] = NA
-  p_missing = length(which(is.na(P1)))/length(P1)
-
-  P1[is.na(P1)] = P2[is.na(P2)] = 0
-
-  cum1 = cumsum(P1)
-  cum2 = cumsum(P2)
-
-  plot(x=c(0,max(cum1)),y=c(0,max(cum2)),col='red',type='l',xlab=xlab,ylab=ylab)
-  #lmfit = lm(cum2~cum1)
-  #a = lmfit$coefficients[1]; b=lmfit$coefficients[2]
-  #x = c(0,max(cum1))
-  #y = a + b*x
-  #plot(x=x,y=y,col='red',type='l',xlab=xlab,ylab=ylab)
-  lines(cum1,cum2,type='l')
-  if (length(Jan1)>0){
-    points(cum1[Jan1],cum2[Jan1],col='black',cex=0.6)
-    text(x=cum1[Jan1],y=cum2[Jan1],labels=Lab,cex=0.6,pos=4)
-    points(x=cum1[i_instrumentChange],y=cum2[i_instrumentChange],col='blue',pch=15)
-    if(!is.null(blend_year_change)){
-      if (!is.na(blend_year_change)){
-        points(x=cum1[i_blend_year_change],y=cum2[i_blend_year_change],col='green',pch=19)
-      }
-    }
-  }
-  legend('bottomright',c('observed','linear','change instrument','change source (pluvio->AWS'),
-         col=c('black','red','blue','green'),
-         pch=c(NA,NA,15,19),
-         lty=c(1,1,NA,NA))
-
-  title(paste0('Cummulative flow. ',year.min,'-',year.max, '. ', format(p_missing*100,digits=2),'% missing'))
-
-}
 
 ########
 
@@ -726,337 +639,25 @@ plot_double_mass = function(P1,date1,P2,date2,
 #instrument = blend_type
 #instrument = instrument_list[1]
 
-instrumentChange = list()
-
 ####################################
 
-instrumentChange[['023083']] = list(dates=c(as.Date('1979/10/11'),
-                                            as.Date('1985/09/06'),
-                                            as.Date('1993/05/04'),
-                                            as.Date('1996/10/15'),
-                                            as.Date('2000/05/16'),
-                                            as.Date('2004/02/09')))
-
-# 023083
-#19930504   19961015 Rimco 7499 TBRG
-#19961015   20000516 HS TB3A-0.2
-#20000516   20040209 Rimco 8020 TBRG
-#20040209   20240630 Rimco 7499 TBRG
-
-# 11/OCT/1979 INSTALL Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 06/SEP/1985 REPLACE Pluviograph (Now Dines syphoning S/N - Unknown) Rainfall Intensity
-# 04/MAY/1993 INSTALL Raingauge (Type Rimco 7499 TBRG S/N - 95-125) Surface Observations
-# 15/OCT/1996 REMOVE Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 15/OCT/1996 REPLACE Raingauge (Now HS TB3A-0.2 S/N - 95-125) Rainfall Intensity
-# 15/OCT/1996 REPLACE Raingauge (Now HS TB3A-0.2 S/N - 95-125) Surface Observations
-# 15/OCT/1996 SHARE Raingauge (Type HS TB3A-0.2 S/N - 95-125) Rainfall Intensity
-# 15/OCT/1996 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 95-125) Rainfall Intensity
-# 15/OCT/1996 SHARE Raingauge (Type Rimco 8020 TBRG S/N - 78064) Rainfall Intensity
-# 16/MAY/2000 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 78064) Rainfall Intensity
-# 09/FEB/2004 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 68942) Rainfall Intensity
-# 21/JAN/2019 UNSHARE Raingauge (Type Rimco 7499 TBRG S/N - 68942) Rainfall Intensity
-
-# 01/JAN/1957 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - Unknown) Surface Observations
-# 22/DEC/1999 REMOVE Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 19/MAR/1993 REPLACE Raingauge (Now 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 09/FEB/2004 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 68942) Surface Observations
-# 16/MAY/2000 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 78064) Surface Observations
-
-####################################
-
-instrumentChange[['023090']] = list(dates=c(as.Date('1977/02/01'),
-                                            as.Date('1992/10/26'),
-                                            as.Date('1998/03/04'),
-                                            as.Date('2000/05/02'),
-                                            as.Date('2003/03/31'),
-                                            as.Date('2006/03/02'),
-                                            as.Date('2009/06/01'),
-                                            as.Date('2010/03/15'),
-                                            as.Date('2013/10/18')))
-# 19921026   19980304 Unknown
-# 19980304   20000502 Rimco 7499 TBRG
-# 20000502   20030331 Rimco 8020 TBRG
-# 20030331   20060302 Rimco 7499 TBRG
-# 20060302   20090601 Rimco 7499 TBRG
-# 20090601   20100315 Rimco 7499 TBRG
-# 20100315   20200911 Rimco 7499 TBRG
-# 20131018   20141203 HS-TB3/0.2/P
-
-# 01/FEB/1977 INSTALL Pluviograph (Type Dines syphoning S/N - NONE) Rainfall Intensity
-# 04/MAR/1998 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - CBM274) Rainfall Intensity
-# 02/MAY/2000 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 78056) Rainfall Intensity
-# 31/MAR/2003 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81169) Rainfall Intensity
-# 02/MAR/2006 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81150) Rainfall Intensity
-# 01/JUN/2009 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 497) Rainfall Intensity
-# 26/JUN/2009 REMOVE Pluviograph (Type Dines syphoning S/N - NONE) Rainfall Intensity
-# 15/MAR/2010 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 0509) Rainfall Intensity
-# 18/OCT/2013 INSTALL Raingauge (Type HS-TB3/0.2/P S/N - 00015) Rainfall Intensity
-# 03/DEC/2014 REMOVE Raingauge (Type HS-TB3/0.2/P S/N - 00015) Rainfall Intensity
-# 11/DEC/2018 REMOVE Raingauge (Type Rimco 7499 TBRG S/N - 0509) Rainfall Intensity
-
-# 17/FEB/1977 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 26/OCT/1992 INSTALL Raingauge (Type Unknown S/N - Unknown) Surface Observations
-# 18/JUN/2015 REMOVE Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-
-# 11/SEP/2020 REMOVE Raingauge (Type Rimco 7499 TBRG S/N - 0509) Surface Observations
-# 15/MAR/2010 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 0509) Surface Observations
-# 01/JUN/2009 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 497) Surface Observations
-# 02/MAR/2006 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81150) Surface Observations
-# 31/MAR/2003 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81169) Surface Observations
-# 04/MAR/1998 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - CBM274) Surface Observations
-# 26/MAR/1996 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 0509) Rainfall Intensity
-# 26/MAR/1996 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 497) Rainfall Intensity
-# 26/MAR/1996 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 81150) Rainfall Intensity
-# 26/MAR/1996 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 81169) Rainfall Intensity
-# 26/MAR/1996 SHARE Raingauge (Type Rimco 7499 TBRG S/N - CBM274) Rainfall Intensity
-# 26/MAR/1996 SHARE Raingauge (Type Rimco 8020 TBRG S/N - 78056) Rainfall Intensity
-# 26/MAR/1996 SHARE Raingauge (Type Unknown S/N - Unknown) Rainfall Intensity
-
-####################################
-
-instrumentChange[['023013']] = list(dates=c(as.Date('1972/08/16'),
-                                            as.Date('1992/07/22'),
-                                            as.Date('1999/10/18'),
-                                            as.Date('2002/08/20'),
-                                            as.Date('2003/01/30'),
-                                            as.Date('2006/06/29')))
-
-# 19920722   19991018 Rimco 7499 TBRG
-# 19991018   20020820 Rimco TBRG (type unspecified)
-# 20020820   20030130 Rimco 7499 TBRG
-# 20030130   20060629 Rimco 7499 TBRG
-# 20060629   20240630 Rimco 7499 TBRG
-
-# 16/AUG/1972 INSTALL Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 21/JUL/1992 REMOVE Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 18/OCT/1999 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 68616) Rainfall Intensity
-# 20/AUG/2002 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81169) Rainfall Intensity
-# 30/JAN/2003 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81139) Rainfall Intensity
-# 29/JUN/2006 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 80599) Rainfall Intensity
-
-# 18/OCT/1999 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 313190) Rainfall Intensity
-# 18/OCT/1999 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 81139) Rainfall Intensity
-# 18/OCT/1999 SHARE Raingauge (Type Rimco 7499 TBRG S/N - 81169) Rainfall Intensity
-# 18/OCT/1999 SHARE Raingauge (Type Rimco TBRG (type unspecified) S/N - 68616) Rainfall Intensity
-# 22/AUG/2018 UNSHARE Raingauge (Type Rimco 7499 TBRG S/N - 80599) Rainfall Intensity
-
-# 22/JUL/1992 INSTALL Raingauge (Type Rimco 7499 TBRG S/N - 313190) Surface Observations
-# 29/JUN/2006 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 80599) Surface Observations
-# 30/JAN/2003 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81139) Surface Observations
-# 20/AUG/2002 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81169) Surface Observations
-# 18/OCT/1999 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 68616) Surface Observations
-
-####################################
-
-instrumentChange[['023034']] = list(dates=c(as.Date('1967/01/01'),
-                                            as.Date('1995/02/01'),
-                                            as.Date('1998/10/06'),
-                                            as.Date('2000/11/14'),
-                                            as.Date('2002/12/17'),
-                                            as.Date('2006/01/13')))
-# 19950201   19981006 HS TB3A-0.2
-# 19981006   19981209 Rimco 8020 TBRG
-# 19981209   20001114 HS TB3A-0.2
-# 20001114   20021216 Rimco 8020 TBRG
-# 20021217   20060113 Rimco 7499 TBRG
-# 20060113   20240630 Rimco 7499 TBRG
-
-# 01/JAN/1967 INSTALL Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 30/APR/1998 REMOVE Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 06/OCT/1998 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 75521) Rainfall Intensity
-# 09/DEC/1998 REPLACE Raingauge (Now HS TB3A-0.2 S/N - 96 -181) Rainfall Intensity
-# 14/NOV/2000 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 78111) Rainfall Intensity
-# 17/DEC/2002 INSTALL Raingauge (Type Rimco 7499 TBRG S/N - 82488) Rainfall Intensity
-# 16/DEC/2002 REMOVE Raingauge (Type Rimco 8020 TBRG S/N - 78111) Rainfall Intensity
-# 13/JAN/2006 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 87561) Rainfall Intensity
-
-# 17/APR/1997 SHARE Raingauge (Type HS TB3A-0.2 S/N - 94-285) Rainfall Intensity
-# 17/APR/1997 SHARE Raingauge (Type HS TB3A-0.2 S/N - 96 -181) Rainfall Intensity
-# 17/APR/1997 SHARE Raingauge (Type Rimco 8020 TBRG S/N - 75521) Rainfall Intensity
-# 17/APR/1997 SHARE Raingauge (Type Rimco 8020 TBRG S/N - 78111) Rainfall Intensity
-# 30/AUG/2018 UNSHARE Raingauge (Type Rimco 7499 TBRG S/N - 87561) Rainfall Intensity
-
-# 16/FEB/1955 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 17/DEC/2002 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 01/FEB/1995 INSTALL Raingauge (Type HS TB3A-0.2 S/N - 94-285) Surface Observations
-# 18/DEC/2013 INSTALL Raingauge (Type HS-TB3/0.2/P S/N - 13-404) External Clients
-# 19/MAR/2007 INSTALL Raingauge (Type Not Listed S/N - Unknown) External Clients
-# 18/JUN/2007 INSTALL Raingauge (Type Not Listed S/N - Unknown) External Clients
-# 22/MAR/1993 INSTALL Raingauge (Type Rimco 7499 TBRG S/N - 096) Flood Warning
-# 17/DEC/2002 INSTALL Raingauge (Type Rimco 7499 TBRG S/N - 82488) Surface Observations
-# 16/DEC/2002 REMOVE Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 31/DEC/2010 REMOVE Raingauge (Type Not Listed S/N - Unknown) External Clients
-# 01/DEC/2011 REMOVE Raingauge (Type Not Listed S/N - Unknown) External Clients
-# 10/AUG/2001 REMOVE Raingauge (Type Rimco 7499 TBRG S/N - 096) Flood Warning
-# 06/MAR/2000 REMOVE Raingauge (Type Rimco 8020 TBRG S/N - 78111) Surface Observations
-# 16/DEC/2002 REMOVE Raingauge (Type Rimco 8020 TBRG S/N - 78111) Surface Observations
-# 09/DEC/1998 REPLACE Raingauge (Now HS TB3A-0.2 S/N - 96 -181) Surface Observations
-# 13/JAN/2006 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 87561) Surface Observations
-# 06/OCT/1998 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 75521) Surface Observations
-# 14/NOV/2000 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 78111) Surface Observations
-# 15/MAR/2000 SHARE Raingauge (Type HS TB3A-0.2 S/N - 94-285) Surface Observations
-# 15/MAR/2000 SHARE Raingauge (Type HS TB3A-0.2 S/N - 96 -181) Surface Observations
-# 15/MAR/2000 SHARE Raingauge (Type Rimco 8020 TBRG S/N - 75521) Surface Observations
-# 15/MAR/2000 SHARE Raingauge (Type Rimco 8020 TBRG S/N - 78111) Surface Observations
-
-####################################
-
-instrumentChange[['023343']] = list(dates=c(as.Date('1958/04/10'),
-                                            as.Date('1967/04/01'),
-                                            as.Date('1997/02/25'),
-                                            as.Date('2000/12/14'),
-                                            as.Date('2001/11/13'),
-                                            as.Date('2004/12/22'),
-                                            as.Date('2012/11/20')))
-
-# 19970225   20001214 HS TB3A-0.2
-# 20001214   20011113 Rimco TBRG (type unspecified)
-# 20011113   20041222 Rimco TBRG (type unspecified)
-# 20041222   20121120 Rimco 7499 TBRG
-# 20121120   20201008 Rimco 7499 TBRG
-
-# 01/APR/1958 INSTALL Pluviograph (Type Unknown S/N - Unknown) Rainfall Intensity
-# 01/APR/1967 REPLACE Pluviograph (Now Dines syphoning S/N - Unknown) Rainfall Intensity
-# 25/FEB/1997 REMOVE Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 25/FEB/1997 INSTALL Raingauge (Type HS TB3A-0.2 S/N - 95-178) Rainfall Intensity
-# 14/DEC/2000 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 314190) Rainfall Intensity
-# 13/NOV/2001 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 70882) Rainfall Intensity
-# 22/DEC/2004 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81129) Rainfall Intensity
-# 20/NOV/2012 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 83287) Rainfall Intensity
-# 08/OCT/2020 REMOVE Raingauge (Type Rimco 7499 TBRG S/N - 83287) Rainfall Intensity
-
-# 01/MAR/1887 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - Unknown) Surface Observations
-# 07/FEB/2020 REMOVE Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 25/SEP/1996 REPLACE Raingauge (Now 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-
-####################################
-
-instrumentChange[['024515']] = list(dates=c(as.Date('1973/01/01'),
-                                            as.Date('1996/07/15'),
-                                            as.Date('2000/10/04'),
-                                            as.Date('2002/05/21'),
-                                            as.Date('2005/04/11')))
-
-# 19960715   20001004 HS TB3A-0.2
-# 20001004   20020521 Rimco TBRG (type unspecified)
-# 20020521   20050411 Rimco 7499 TBRG
-# 20050411   20240630 Rimco 7499 TBRG
-
-# 01/JAN/1973 INSTALL Pluviograph (Type Unknown S/N - Unknown) Rainfall Intensity
-# 15/JUL/1996 INSTALL Raingauge (Type HS TB3A-0.2 S/N - 95-131) Rainfall Intensity
-# 31/JUL/1996 REMOVE Pluviograph (Type Unknown S/N - Unknown) Rainfall Intensity
-# 04/OCT/2000 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 72802) Rainfall Intensity
-# 21/MAY/2002 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 82511) Rainfall Intensity
-# 11/APR/2005 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 84598) Rainfall Intensity
-
-# 01/AUG/1889 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-
-####################################
-
-instrumentChange[['023801']] = list(dates=c(as.Date('1972/10/04'),
-                                            as.Date('1996/11/25'),
-                                            as.Date('2001/01/08'),
-                                            as.Date('2002/01/07'),
-                                            as.Date('2002/04/12'),
-                                            as.Date('2005/04/19'),
-                                            as.Date('2018/03/21')))
-
-# 19961125   20010108 HS TB3A-0.2
-# 20010108   20020107 Rimco TBRG (type unspecified)
-# 20020107   20020412 Rimco TBRG (type unspecified)
-# 20020412   20050419 Rimco 7499 TBRG
-# 20050419   20180321 Rimco 8020 TBRG
-
-# 04/OCT/1972 INSTALL Pluviograph (Type Dines syphoning S/N - CMO 21) Rainfall Intensity
-# 01/JAN/1973 INSTALL Pluviograph (Type Casella 8" pluviometer S/N - Unknown) Rainfall Intensity
-# 25/NOV/1996 REMOVE Pluviograph (Type Casella 8" pluviometer S/N - Unknown) Rainfall Intensity
-# 25/NOV/1996 REMOVE Pluviograph (Type Dines syphoning S/N - CMO 21) Rainfall Intensity
-# 25/NOV/1996 INSTALL Raingauge (Type HS TB3A-0.2 S/N - 96/163) Rainfall Intensity
-# 08/JAN/2001 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 580) Rainfall Intensity
-# 12/APR/2002 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81145) Rainfall Intensity
-# 07/JAN/2002 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - 444) Rainfall Intensity
-# 19/APR/2005 REPLACE Raingauge (Now Rimco 8020 TBRG S/N - 75520) Rainfall Intensity
-# 21/MAR/2018 REMOVE Raingauge (Type Rimco 8020 TBRG S/N - 75520) Rainfall Intensity
-
-# 21/MAR/2018 REMOVE Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 01/OCT/1967 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 21/MAR/2018 INSTALL Raingauge (Type Rimco 7499 TBRG S/N - 88737) Flood Warning
-
-
-####################################
-
-instrumentChange[['023823']] = list(dates=c(as.Date('1973/03/28'),
-                                            as.Date('1996/11/29'),
-                                            as.Date('1999/08/06'),
-                                            as.Date('2002/01/03'),
-                                            as.Date('2005/09/06')))
-
-# 19961129   19990806 HS TB3A-0.2
-# 19990806   20020103 Rimco TBRG (type unspecified)
-# 20020103   20050906 Rimco 7499 TBRG
-# 20050906   20240630 Rimco 7499 TBRG
-
-# 28/MAR/1973 INSTALL Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 29/NOV/1996 INSTALL Raingauge (Type HS TB3A-0.2 S/N - 96/186) Rainfall Intensity
-# 30/NOV/1996 REMOVE Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 03/JAN/2002 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81144) Rainfall Intensity
-# 06/SEP/2005 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 84658) Rainfall Intensity
-
-# 01/JAN/1936 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - Unknown) Surface Observations
-# 30/JUL/1991 REPLACE Raingauge (Now 203 mm (8in) - 200mm capacity S/N - NONE) Surface Observations
-# 01/MAR/1973 REPLACE Raingauge (Now 203 mm (8in) - 200mm capacity S/N - Unknown) Surface Observations
-
-####################################
-
-instrumentChange[['023763']] = list(dates=c(as.Date('1970/10/19'),
-                                            as.Date('1978/06/14'),
-                                            as.Date('1983/01/04'),
-                                            as.Date('1996/06/02'),
-                                            as.Date('1998/11/20'),
-                                            as.Date('2000/05/17'),
-                                            as.Date('2003/09/24'),
-                                            as.Date('2013/01/08'),
-                                            as.Date('2021/08/11')))
-
-# 19960602   19981120 HS TB3A-0.2
-# 19981120   20000517 HS TB3A-0.2
-# 20000517   20030924 Rimco TBRG (type unspecified)
-# 20030924   20130108 Rimco 7499 TBRG
-# 20130108   20210811 Rimco 7499 TBRG
-
-# 19/OCT/1970 INSTALL Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 14/JUN/1978 REPLACE Pluviograph (Now Dines syphoning S/N - 215) Rainfall Intensity
-# 04/JAN/1983 REPLACE Pluviograph (Now Dines syphoning S/N - Unknown) Rainfall Intensity
-# 02/JUN/1996 REMOVE Pluviograph (Type Dines syphoning S/N - Unknown) Rainfall Intensity
-# 02/JUN/1996 INSTALL Raingauge (Type HS TB3A-0.2 S/N - 96-180) Rainfall Intensity
-# 20/NOV/1998 REPLACE Raingauge (Now HS TB3A-0.2 S/N - 96-303) Rainfall Intensity
-# 17/MAY/2000 REPLACE Raingauge (Now Rimco TBRG (type unspecified) S/N - NONE) Rainfall Intensity
-# 24/SEP/2003 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 82409) Rainfall Intensity
-# 08/JAN/2013 REPLACE Raingauge (Now Rimco 7499 TBRG S/N - 81129) Rainfall Intensity
-# 11/AUG/2021 REMOVE Raingauge (Type Rimco 7499 TBRG S/N - 81129) Rainfall Intensity
-
-# 01/SEP/1954 INSTALL Raingauge (Type 203 mm (8in) - 200mm capacity S/N - Unknown) Surface Observations
-# 02/JUN/1996 REMOVE Raingauge (Type 203 mm (8in) - 200mm capacity S/N - Unknown) Surface Observations
-
-####################################
-
-aggPeriod = '1 month'
-for (instrument in plot.instrument_list){
+AggPeriod = '1 month'
+for (Instrument in Plot.instrument_list){
   par(mfrow=c(1,1),mar=c(4,4,1,1))
-  for (site in site_list){
-  #  for (site in '023083'){
-      a1 = agg_data_list[[site]][[instrument]][[aggPeriod]]
-    date1 = a1$date
+  for (Site in Site_list){
+    a1 = Agg_data_list[[Site]][[Instrument]][[AggPeriod]]
+    Date1 = a1$date
     P1 = a1$P
-    plot_double_mass(P1=P0,P2=P1,date1 = date0,date2 = date1,
-                     year.min = plot.year.min,year.max = plot.year.max,
-                     instrumentChange=instrumentChange[[site]],
-                     blend_year_change=blend_year_change[[site]],
+    plot_double_mass(p1=P0,p2=P1,date1 = Date0,date2 = Date1,
+                     year.min = Plot.year.min,year.max = Plot.year.max,
+                     instrumentChange=InstrumentChange[[Site]],
+                     blend_year_change=Blend_year_change[[Site]],
                      xlab='Happy Valley HQ site (023721)',
-                     ylab=paste0(site_labels[[site]],' (',site,') - ',instrument))
+                     ylab=paste0(Site_labels[[Site]],' (',Site,') - ',Instrument))
   }
 }
 
+####################################
 
 dev.off()
 
@@ -1126,3 +727,44 @@ dev.off()
 # lines(year_vec,rqfit$coefficients[1,2]+rqfit$coefficients[2,2]*year_vec)
 # lines(year_vec,lm2$coefficients[1]+lm2$coefficients[2]*year_vec,col='red')
 # abline(h=quantile(agg_data$P,probs=probs[2],na.rm=T),col='blue')
+
+
+#################################
+
+instrument1 = 'AWS_pluvio'
+instrument2 = 'combo_sources_sites'
+
+for (site in Site_list){
+  for (aggPeriod in AggPeriod_list){
+    par(mfrow=c(3,2),oma=c(1,1,3,1),mar=c(5,5,1,1))
+    for (metric in Metric_list){
+      o1 = Annual_metrics_list[[site]][[instrument1]][[aggPeriod]]
+      years1 = o1$year
+      
+      o2 = Annual_metrics_list[[site]][[instrument2]][[aggPeriod]]
+      years2 = o2$year
+      
+      plot(years1,o1$metrics[,metric],type='o',col='black',
+           xlab='year',ylab=metric,
+           xlim=c(Plot.year.min,Plot.year.max))
+      lines(years2,o2$metrics[,metric],type='o',col='red')
+      
+      title(metric)
+    }
+  
+    plot(years1,o1$missing,type='o',col='black',
+         xlab='year',ylab='missing',
+         xlim=c(Plot.year.min,Plot.year.max))
+    
+    lines(years2,o2$missing,type='o',col='red')
+    
+    nonsite = 1-apply(o2$sources.years[,c('AWS.site','pluvio.site')],1,sum)
+
+    lines(years2,nonsite,type='o',col='cyan',lty=3)
+    
+    title(paste(site,aggPeriod),outer=T)
+  }
+}
+
+
+
